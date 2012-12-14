@@ -32,7 +32,7 @@ var GitHubWrapper = (function() {
 	var emptyFn = function () {};
 
 	that.getEncodedUserNameAndPassword = function () {
-		return Base64.encode('frikille@gmail.com:BaPe711');
+		return Base64.encode('username@password');
 	}
 
 	that.callApi = function (options) {
