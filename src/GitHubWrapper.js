@@ -4,8 +4,7 @@ var GitHubWrapper = (function() {
 
 	var that = {},
 		xhrBaseOptions = {
-			githubDomain : 'https://api.github.com',
-			contentType : 'application/json'
+			githubDomain : 'https://api.github.com'
 		};
 
 	var createXHR = function () {
@@ -18,7 +17,7 @@ var GitHubWrapper = (function() {
 		return function () {
 			if (this.readyState == 4) {
 				if (this.status >= 200 && this.status <= 300 || this.status == 304) {
-					success(JSON.parse(this.responseText), this.getAllResponseHeaders());
+					success(JSON.parse(this.responseText), this.getAllResponseHeaders(), this.status);
 				} else {
 					failure(JSON.parse(this.responseText), this.getAllResponseHeaders(), this.status);
 				}
@@ -28,8 +27,8 @@ var GitHubWrapper = (function() {
 
 	var emptyFn = function () {};
 
-	that.getEncodedUserNameAndPassword = function () {
-		return Base64.encode('username:password');
+	that.getEncodedUserNameAndPassword = function (username, password) {
+		return Base64.encode(username + ':' + password);
 	}
 
 	that.callApi = function (options) {
@@ -37,6 +36,8 @@ var GitHubWrapper = (function() {
 			method = options.method || 'GET',
 			async = true,
 			auth = options.auth || null,
+			username = options.username,
+			password = options.password,
 			url = xhrBaseOptions.githubDomain + options.apiUrl,
 			success = options.success || emptyFn,
 			failure = options.failure || emptyFn;
@@ -45,12 +46,20 @@ var GitHubWrapper = (function() {
 
 		xhr.onreadystatechange = xhrOnReadyStateChange(success, failure);
 
-		if (options.auth) {
-			xhr.setRequestHeader('Authorization', 'Basic ' + this.getEncodedUserNameAndPassword());
+		if (auth && username && password) {
+			xhr.setRequestHeader('Authorization', 'Basic ' + this.getEncodedUserNameAndPassword(username, password));
 		}
 
 		xhr.send();
 	};
+
+	that.checkAuthParams = function (username, password) {
+		if (options.username === undefined || options.password === undefined) {
+			return false;
+		}
+
+		return true;
+	}
 
 	return that;
 })();
