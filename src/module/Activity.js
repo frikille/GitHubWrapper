@@ -40,7 +40,6 @@
 	 *  id notification id
 	 * 	unread Boolean Changes the unread status of the threads.
 	 *  read Boolean inverse of read
-	 *  
 	 */
 	that.markNotificationAsRead : function (options) {
 		var options = options || {};
