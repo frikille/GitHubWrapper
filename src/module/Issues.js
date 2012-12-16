@@ -50,4 +50,88 @@
 
 	namespace.Issues = that;
 
+	that.listUserAllIssues = function (options) {
+
+	};
+
+	that.listUserIssuesOfOwnedAndMemberRepositories = function (options) {
+
+	};
+
+	that.getIssue = function (options) {
+
+	};
+
+	that.createIssue = function (options) {
+
+	};
+
+	that.editIssue = function (options) {
+
+	};
+
+	that.listAssignees = function (options) {
+
+	};
+
+	that.listCommentsOnIssue = function (options) {
+
+	};
+
+	that.getComment = function (options) {
+
+	};
+
+	that.createComment = function (options) {
+
+	};
+
+	that.editComment = function (options) {
+
+	};
+
+	that.deleteComment = function (options) {
+
+	};
+
+	that.listLabels = function (options) {
+
+	};
+
+	that.createLabel = function (options) {
+
+	};
+
+	that.listLabelsOnIssue = function (options) {
+
+	};
+
+	that.addLabelToIssue = function (options) {
+
+	};
+
+	that.removeLabelFromIssue = function (options) {
+
+	};
+
+	that.replaceLabelsOnIssue = function (options) {
+
+	};
+
+	that.listMilestones = function (options) {
+
+	};
+
+	that.getMilestone = function (options) {
+
+	};
+
+	that.createMilestone = function (options) {
+
+	};
+
+	that.updateMilestone = function (options) {
+
+	};
+
 }(window.GitHubWrapper || (window.GitHubWrapper = {})));
