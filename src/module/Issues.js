@@ -51,87 +51,331 @@
 	namespace.Issues = that;
 
 	that.listUserAllIssues = function (options) {
+		var options = options || {};
 
+		if (!GitHubWrapper.checkAuthParams()) {
+			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		}
+
+		options.auth == true;
+
+		options.method = apiMethods['listUserAllIssues'];
+		options.apiUrl = apiUrls['listUserAllIssues'];
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.listUserIssuesOfOwnedAndMemberRepositories = function (options) {
+		var options = options || {};
 
+		if (!GitHubWrapper.checkAuthParams()) {
+			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		}
+
+		options.auth == true;
+
+		options.method = apiMethods['listUserIssuesOfOwnedAndMemberRepositories'];
+		options.apiUrl = apiUrls['listUserIssuesOfOwnedAndMemberRepositories'];
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.getIssue = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			issueNumber = options.issueNumber;
 
+		if (user === undefined || repo === undefined || issueNumber === undefined) {
+			throw new Error('required but missing parameters: [user, repo, issueNumber]');
+		}
+
+		options.method = apiMethods['getIssue'];
+		options.apiUrl = apiUrls['getIssue'].format(user, repo, issueNumber);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.createIssue = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo;
 
+		if (user === undefined || repo === undefined) {
+			throw new Error('required but missing parameters: [user, repo]');
+		}
+
+		options.method = apiMethods['createIssue'];
+		options.apiUrl = apiUrls['createIssue'].format(user, repo);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.editIssue = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			issueNumber = options.issueNumber;
 
+		if (user === undefined || repo === undefined || issueNumber === undefined) {
+			throw new Error('required but missing parameters: [user, repo, issueNumber]');
+		}
+
+		options.method = apiMethods['editIssue'];
+		options.apiUrl = apiUrls['editIssue'].format(user, repo, issueNumber);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.listAssignees = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo;
 
+		if (user === undefined || repo === undefined) {
+			throw new Error('required but missing parameters: [user, repo]');
+		}
+
+		options.method = apiMethods['listAssignees'];
+		options.apiUrl = apiUrls['listAssignees'].format(user, repo);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.listCommentsOnIssue = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			issueNumber = options.issueNumber;
 
+		if (user === undefined || repo === undefined || issueNumber === undefined) {
+			throw new Error('required but missing parameters: [user, repo, issueNumber]');
+		}
+
+		options.method = apiMethods['listCommentsOnIssue'];
+		options.apiUrl = apiUrls['listCommentsOnIssue'].format(user, repo);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.getComment = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			commentId = options.commentId;
 
+		if (user === undefined || repo === undefined || commentId === undefined) {
+			throw new Error('required but missing parameters: [user, repo, commentId]');
+		}
+
+		options.method = apiMethods['getComment'];
+		options.apiUrl = apiUrls['getComment'].format(user, repo, commentId);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.createComment = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			issueNumber = options.issueNumber;
 
+		if (user === undefined || repo === undefined || issueNumber === undefined) {
+			throw new Error('required but missing parameters: [user, repo, issueNumber]');
+		}
+
+		options.method = apiMethods['createComment'];
+		options.apiUrl = apiUrls['createComment'].format(user, repo, issueNumber);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.editComment = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			commentId = options.commentId;
 
+		if (user === undefined || repo === undefined || commentId === undefined) {
+			throw new Error('required but missing parameters: [user, repo, commentId]');
+		}
+
+		options.method = apiMethods['editComment'];
+		options.apiUrl = apiUrls['editComment'].format(user, repo);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.deleteComment = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			commentId = options.commentId;
 
+		if (user === undefined || repo === undefined || commentId === undefined) {
+			throw new Error('required but missing parameters: [user, repo, commentId]');
+		}
+
+		options.method = apiMethods['deleteComment'];
+		options.apiUrl = apiUrls['deleteComment'].format(user, repo);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.listLabels = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo;
 
+		if (user === undefined || repo === undefined) {
+			throw new Error('required but missing parameters: [user, repo]');
+		}
+
+		options.method = apiMethods['listLabels'];
+		options.apiUrl = apiUrls['listLabels'].format(user, repo);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.createLabel = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo;
 
+		if (user === undefined || repo === undefined) {
+			throw new Error('required but missing parameters: [user, repo]');
+		}
+
+		options.method = apiMethods['createLabel'];
+		options.apiUrl = apiUrls['createLabel'].format(user, repo);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.listLabelsOnIssue = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			issueNumber = options.issueNumber;
 
+		if (user === undefined || repo === undefined || issueNumber === undefined) {
+			throw new Error('required but missing parameters: [user, repo, issueNumber]');
+		}
+
+		options.method = apiMethods['listLabelsOnIssue'];
+		options.apiUrl = apiUrls['listLabelsOnIssue'].format(user, repo, issueNumber);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.addLabelToIssue = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			issueNumber = options.issueNumber;
 
+		if (user === undefined || repo === undefined || issueNumber === undefined) {
+			throw new Error('required but missing parameters: [user, repo, issueNumber]');
+		}
+
+		options.method = apiMethods['addLabelToIssue'];
+		options.apiUrl = apiUrls['addLabelToIssue'].format(user, repo, issueNumber);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.removeLabelFromIssue = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			issueNumber = options.issueNumber;
 
+		if (user === undefined || repo === undefined || issueNumber === undefined) {
+			throw new Error('required but missing parameters: [user, repo, issueNumber]');
+		}
+
+		options.method = apiMethods['removeLabelFromIssue'];
+		options.apiUrl = apiUrls['removeLabelFromIssue'].format(user, repo, issueNumber);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.replaceLabelsOnIssue = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			issueNumber = options.issueNumber;
 
+		if (user === undefined || repo === undefined || issueNumber === undefined) {
+			throw new Error('required but missing parameters: [user, repo, issueNumber]');
+		}
+
+		options.method = apiMethods['replaceLabelsOnIssue'];
+		options.apiUrl = apiUrls['replaceLabelsOnIssue'].format(user, repo, issueNumber);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.listMilestones = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo;
 
+		if (user === undefined || repo === undefined) {
+			throw new Error('required but missing parameters: [user, repo]');
+		}
+
+		options.method = apiMethods['listMilestones'];
+		options.apiUrl = apiUrls['listMilestones'].format(user, repo);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.getMilestone = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			milestoneNumber = options.milestoneNumber;
 
+		if (user === undefined || repo === undefined || milestoneNumber === undefined) {
+			throw new Error('required but missing parameters: [user, repo, milestoneNumber]');
+		}
+
+		options.method = apiMethods['getMilestone'];
+		options.apiUrl = apiUrls['getMilestone'].format(user, repo, milestoneNumber);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.createMilestone = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo;
 
+		if (user === undefined || repo === undefined) {
+			throw new Error('required but missing parameters: [user, repo]');
+		}
+
+		options.method = apiMethods['createMilestone'];
+		options.apiUrl = apiUrls['createMilestone'].format(user, repo);
+
+		GitHubWrapper.callApi(options);
 	};
 
 	that.updateMilestone = function (options) {
+		var options = options || {},
+			user = options.user,
+			repo = options.repo,
+			milestoneNumber = options.milestoneNumber;
 
+		if (user === undefined || repo === undefined || milestoneNumber === undefined) {
+			throw new Error('required but missing parameters: [user, repo, milestoneNumber]');
+		}
+
+		options.method = apiMethods['updateMilestone'];
+		options.apiUrl = apiUrls['updateMilestone'].format(user, repo, milestoneNumber);
+
+		GitHubWrapper.callApi(options);
 	};
 
 }(window.GitHubWrapper || (window.GitHubWrapper = {})));
