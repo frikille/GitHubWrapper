@@ -50,6 +50,12 @@
 
 	namespace.Issues = that;
 
+	/*
+	* Returns all issues of the current user.
+	* 
+	* Authorization required!
+	* 
+	*/
 	that.listUserAllIssues = function (options) {
 		var options = options || {};
 
