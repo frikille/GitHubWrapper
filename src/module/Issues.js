@@ -4,6 +4,7 @@
 		apiUrls = {
 			listUserAllIssues : '/issues',
 			listUserIssuesOfOwnedAndMemberRepositories : '/user/issues/',
+            listIssuesForRepository : '/repos/{0}/{1}/issues',
 			getIssue : '/repos/{0}/{1}/issues/{2}',
 			createIssue : '/repos/{0}/{1}/issues',
 			editIssue : '/repos/{0}/{1}/issues/{2}',
@@ -27,6 +28,7 @@
 		apiMethods = {
 			listUserAllIssues : 'GET',
 			listUserIssuesOfOwnedAndMemberRepositories : 'GET',
+            listIssuesForRepository : 'GET',
 			getIssue : 'GET',
 			createIssue : 'POST',
 			editIssue : 'PATCH',
@@ -54,6 +56,26 @@
 	* Returns all issues of the current user.
 	* 
 	* Authorization required!
+    *
+    * Example options config object:
+    * {
+    *   username : 'username',
+    *   password : 'password',
+    *   success : function(responseText, responseHeaders, status) {
+    *       //callback function on success
+    *    },
+    *   failure : function(responseText, responseHeaders, status) {
+    *       //callback function on failure
+    *    },
+    *   params : {
+    *       filter : 'all', //availaible values: assigned, created, mentioned, subscribed, all
+    *       state : 'open, //available values: open, closed
+    *       labels : 'label1,label2',
+    *       sort: 'created', //available values: created, updated, comments
+    *       direction : 'ASC', //available values: ASC, DESC
+    *       since : 'YYYY-MM-DDTHH:MM:SSZ' //ISO-8601 format
+    *   }
+    * }
 	* 
 	*/
 	that.listUserAllIssues = function (options) {
@@ -71,6 +93,32 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /*
+    * Returns all issues of the current user.
+	* 
+	* Authorization required!
+    *
+    * Example options config object:
+    * {
+    *   username : 'username',
+    *   password : 'password',
+    *   success : function(responseText, responseHeaders, status) {
+    *       //callback function on success
+    *    },
+    *   failure : function(responseText, responseHeaders, status) {
+    *       //callback function on failure
+    *    },
+    *   params : {
+    *       filter : 'all', //availaible values: assigned, created, mentioned, subscribed, all
+    *       state : 'open, //available values: open, closed
+    *       labels : 'label1,label2',
+    *       sort: 'created', //available values: created, updated, comments
+    *       direction : 'ASC', //available values: ASC, DESC
+    *       since : 'YYYY-MM-DDTHH:MM:SSZ' //ISO-8601 format
+    *   }
+    * }
+	* 
+	*/
 	that.listUserIssuesOfOwnedAndMemberRepositories = function (options) {
 		var options = options || {};
 
@@ -85,6 +133,22 @@
 
 		GitHubWrapper.callApi(options);
 	};
+    
+    
+    that.listIssuesForRepository : function (options) {
+        var options = options || {},
+            user = option.user,
+            repo = options.repo;
+            
+        if (user === undefined || repo === undefined) {
+    		throw new Error('required but missing parameters: [user, repo]');
+		}
+
+		options.method = apiMethods['listIssuesForRepository'];
+		options.apiUrl = apiUrls['listIssuesForRepository'].format(user, repo);
+
+		GitHubWrapper.callApi(options);
+    };
 
 	that.getIssue = function (options) {
 		var options = options || {},
