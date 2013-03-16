@@ -2,12 +2,12 @@
 
 	var that = {},
 		apiUrls = {
-			listNotifications = '/notifications',
-			markAsRead = '/notifications'
+			listNotifications : '/notifications',
+			markAsRead : '/notifications'
 		},
 		apiMethods = {
-			listNotifications = 'GET',
-			markAsRead = 'PUT'
+			listNotifications : 'GET',
+			markAsRead : 'PUT'
 		};
 
 	/* Listing user's all notifications
@@ -25,8 +25,8 @@
 		options.method = apiMethods['listNotifications'];
 		options.apiUrl = apiUrls['listNotifications'];
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		GitHubWrapper.callApi(options);
@@ -41,15 +41,15 @@
 	 * 	unread Boolean Changes the unread status of the threads.
 	 *  read Boolean inverse of read
 	 */
-	that.markNotificationAsRead : function (options) {
+	that.markNotificationAsRead = function (options) {
 		var options = options || {};
 
 		options.auth == true;
 		options.method = apiMethods['markAsRead'];
 		options.apiUrl = apiUrls['markAsRead'];
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		GitHubWrapper.callApi(options);

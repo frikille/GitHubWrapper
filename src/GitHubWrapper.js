@@ -36,6 +36,7 @@ var GitHubWrapper = (function() {
 			method = options.method || 'GET',
 			async = true,
 			auth = options.auth || null,
+			authType = options.authType || 'OAUTH',
 			username = options.username,
 			password = options.password,
 			url = xhrBaseOptions.githubDomain + options.apiUrl,
@@ -46,16 +47,23 @@ var GitHubWrapper = (function() {
 
 		xhr.onreadystatechange = xhrOnReadyStateChange(success, failure);
 
-		if (auth && username && password) {
-			xhr.setRequestHeader('Authorization', 'Basic ' + this.getEncodedUserNameAndPassword(username, password));
+		if (auth) {
+			if (authType == 'OAUTH') {
+				xhr.setRequestHeader('Authorization', 'token ' + options.accesToken);
+			} else {
+				xhr.setRequestHeader('Authorization', 'Basic ' + this.getEncodedUserNameAndPassword(username, password));
+			}
 		}
 
 		xhr.send();
 	};
 
-	that.checkAuthParams = function (username, password) {
-		if (options.username === undefined || options.password === undefined) {
-			return false;
+	that.checkAuthParams = function (options) {
+		var authType = options.authType || 'OAUTH';
+		if (authType == 'OAUTH') {
+			if (options.accesToken === undefined) return false;
+		} else {
+			if (options.username === undefined || options.password === undefined) return false;
 		}
 
 		return true;

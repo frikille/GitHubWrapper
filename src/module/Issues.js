@@ -11,7 +11,7 @@
 			listAssignees : '/repos/{0}/{1}/assignees',
 			listCommentsOnIssue : '/repos/{0}/{1}/issues/{2}/comments',
 			getComment : '/repos/{0}/{1}/issues/comments/{2}',
-			createComment : '/repos/{0}/{1}/issues/{2}/comments'
+			createComment : '/repos/{0}/{1}/issues/{2}/comments',
 			editComment : '/repos/{0}/{1}/issues/comments/{2}',
 			deleteComment : '/repos/{0}/{1}/issues/comments/{2}',
 			listLabels : '/repos/{0}/{1}/labels',
@@ -19,7 +19,7 @@
 			listLabelsOnIssue : '/repos/{0}/{1}/issues/{2}/labels',
 			addLabelToIssue : '/repos/{0}/{1}/issues/{2}/labels',
 			removeLabelFromIssue : '/repos/{0}/{1}/issues/{2}/labels/:name',
-			replaceLabelsOnIssue : '/repos/{0}/{1}/issues/{2}/labels'
+			replaceLabelsOnIssue : '/repos/{0}/{1}/issues/{2}/labels',
 			listMilestones : '/repos/{0}/{1}/milestones',
 			getMilestone : '/repos/{0}/{1}/milestones/{2}',
 			createMilestone : '/repos/{0}/{1}/milestones',
@@ -81,8 +81,8 @@
 	that.listUserAllIssues = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		options.auth == true;
@@ -122,8 +122,8 @@
 	that.listUserIssuesOfOwnedAndMemberRepositories = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		options.auth == true;
@@ -135,7 +135,7 @@
 	};
     
     
-    that.listIssuesForRepository : function (options) {
+    that.listIssuesForRepository = function (options) {
         var options = options || {},
             user = option.user,
             repo = options.repo;

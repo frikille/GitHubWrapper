@@ -2,21 +2,21 @@
 
 	var that = {},
 		apiUrls = {
-			getSingleUser = '/users/:user',
-			getAuthenticatedUser = '/user',
-			updateAuthenticatedUser = '/user'
+			getSingleUser : '/users/:user',
+			getAuthenticatedUser : '/user',
+			updateAuthenticatedUser : '/user'
 		},
 		apiMethods = {
-			getSingleUser = 'GET',
-			getAuthenticatedUser = 'GET',
-			updateAuthenticatedUser = 'PATCH'
+			getSingleUser : 'GET',
+			getAuthenticatedUser : 'GET',
+			updateAuthenticatedUser : 'PATCH'
 		};
 
 	that.getAuthenticatedUserData = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		options.auth == true;
@@ -30,8 +30,8 @@
 	that.updateAuthenticatedUser = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		options.auth == true;

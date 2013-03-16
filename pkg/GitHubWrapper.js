@@ -20,7 +20,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-/* VERSION: 0.1.0.5*/
+/* VERSION: 0.1.0.9*/
 
 /*
 */
@@ -60,6 +60,7 @@ var GitHubWrapper = (function() {
 			method = options.method || 'GET',
 			async = true,
 			auth = options.auth || null,
+			authType = options.authType || 'OAUTH',
 			username = options.username,
 			password = options.password,
 			url = xhrBaseOptions.githubDomain + options.apiUrl,
@@ -70,16 +71,23 @@ var GitHubWrapper = (function() {
 
 		xhr.onreadystatechange = xhrOnReadyStateChange(success, failure);
 
-		if (auth && username && password) {
-			xhr.setRequestHeader('Authorization', 'Basic ' + this.getEncodedUserNameAndPassword(username, password));
+		if (auth) {
+			if (authType == 'OAUTH') {
+				xhr.setRequestHeader('Authorization', 'token ' + options.accesToken);
+			} else {
+				xhr.setRequestHeader('Authorization', 'Basic ' + this.getEncodedUserNameAndPassword(username, password));
+			}
 		}
 
 		xhr.send();
 	};
 
-	that.checkAuthParams = function (username, password) {
-		if (options.username === undefined || options.password === undefined) {
-			return false;
+	that.checkAuthParams = function (options) {
+		var authType = options.authType || 'OAUTH';
+		if (authType == 'OAUTH') {
+			if (options.accesToken === undefined) return false;
+		} else {
+			if (options.username === undefined || options.password === undefined) return false;
 		}
 
 		return true;
@@ -91,12 +99,12 @@ var GitHubWrapper = (function() {
 
 	var that = {},
 		apiUrls = {
-			listNotifications = '/notifications',
-			markAsRead = '/notifications'
+			listNotifications : '/notifications',
+			markAsRead : '/notifications'
 		},
 		apiMethods = {
-			listNotifications = 'GET',
-			markAsRead = 'PUT'
+			listNotifications : 'GET',
+			markAsRead : 'PUT'
 		};
 
 	/* Listing user's all notifications
@@ -114,8 +122,8 @@ var GitHubWrapper = (function() {
 		options.method = apiMethods['listNotifications'];
 		options.apiUrl = apiUrls['listNotifications'];
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		GitHubWrapper.callApi(options);
@@ -130,15 +138,15 @@ var GitHubWrapper = (function() {
 	 * 	unread Boolean Changes the unread status of the threads.
 	 *  read Boolean inverse of read
 	 */
-	that.markNotificationAsRead : function (options) {
+	that.markNotificationAsRead = function (options) {
 		var options = options || {};
 
 		options.auth == true;
 		options.method = apiMethods['markAsRead'];
 		options.apiUrl = apiUrls['markAsRead'];
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		GitHubWrapper.callApi(options);
@@ -160,7 +168,7 @@ var GitHubWrapper = (function() {
 			listAssignees : '/repos/{0}/{1}/assignees',
 			listCommentsOnIssue : '/repos/{0}/{1}/issues/{2}/comments',
 			getComment : '/repos/{0}/{1}/issues/comments/{2}',
-			createComment : '/repos/{0}/{1}/issues/{2}/comments'
+			createComment : '/repos/{0}/{1}/issues/{2}/comments',
 			editComment : '/repos/{0}/{1}/issues/comments/{2}',
 			deleteComment : '/repos/{0}/{1}/issues/comments/{2}',
 			listLabels : '/repos/{0}/{1}/labels',
@@ -168,7 +176,7 @@ var GitHubWrapper = (function() {
 			listLabelsOnIssue : '/repos/{0}/{1}/issues/{2}/labels',
 			addLabelToIssue : '/repos/{0}/{1}/issues/{2}/labels',
 			removeLabelFromIssue : '/repos/{0}/{1}/issues/{2}/labels/:name',
-			replaceLabelsOnIssue : '/repos/{0}/{1}/issues/{2}/labels'
+			replaceLabelsOnIssue : '/repos/{0}/{1}/issues/{2}/labels',
 			listMilestones : '/repos/{0}/{1}/milestones',
 			getMilestone : '/repos/{0}/{1}/milestones/{2}',
 			createMilestone : '/repos/{0}/{1}/milestones',
@@ -230,8 +238,8 @@ var GitHubWrapper = (function() {
 	that.listUserAllIssues = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		options.auth == true;
@@ -271,8 +279,8 @@ var GitHubWrapper = (function() {
 	that.listUserIssuesOfOwnedAndMemberRepositories = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		options.auth == true;
@@ -284,7 +292,7 @@ var GitHubWrapper = (function() {
 	};
     
     
-    that.listIssuesForRepository : function (options) {
+    that.listIssuesForRepository = function (options) {
         var options = options || {},
             user = option.user,
             repo = options.repo;
@@ -603,25 +611,25 @@ var GitHubWrapper = (function() {
 
 	var that = {},
 		apiUrls = {
-			ownRepositories = '/user/repos',
-			getRepository = '/repos/{0}/{1}',
-			listContributors = '/repos/{0}/{1}/contributors',
-			listTags = '/repos/{0}/{1}/tags',
-			listBranches = '/repos/{0}/{1}/branches'
+			ownRepositories : '/user/repos',
+			getRepository : '/repos/{0}/{1}',
+			listContributors : '/repos/{0}/{1}/contributors',
+			listTags : '/repos/{0}/{1}/tags',
+			listBranches : '/repos/{0}/{1}/branches'
 		},
 		apiMethods = {
-			ownRepositories = 'GET',
-			getRepository = 'GET',
-			listContributors = 'GET',
-			listTags = 'GET',
-			listBranches = 'GET'
+			ownRepositories : 'GET',
+			getRepository : 'GET',
+			listContributors : 'GET',
+			listTags : 'GET',
+			listBranches : 'GET'
 		};
 
 	that.getUserRepositories = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		options.auth == true;
@@ -700,21 +708,21 @@ var GitHubWrapper = (function() {
 
 	var that = {},
 		apiUrls = {
-			getSingleUser = '/users/:user',
-			getAuthenticatedUser = '/user',
-			updateAuthenticatedUser = '/user'
+			getSingleUser : '/users/:user',
+			getAuthenticatedUser : '/user',
+			updateAuthenticatedUser : '/user'
 		},
 		apiMethods = {
-			getSingleUser = 'GET',
-			getAuthenticatedUser = 'GET',
-			updateAuthenticatedUser = 'PATCH'
+			getSingleUser : 'GET',
+			getAuthenticatedUser : 'GET',
+			updateAuthenticatedUser : 'PATCH'
 		};
 
 	that.getAuthenticatedUserData = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		options.auth == true;
@@ -728,8 +736,8 @@ var GitHubWrapper = (function() {
 	that.updateAuthenticatedUser = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		options.auth == true;

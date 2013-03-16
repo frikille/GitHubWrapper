@@ -2,25 +2,25 @@
 
 	var that = {},
 		apiUrls = {
-			ownRepositories = '/user/repos',
-			getRepository = '/repos/{0}/{1}',
-			listContributors = '/repos/{0}/{1}/contributors',
-			listTags = '/repos/{0}/{1}/tags',
-			listBranches = '/repos/{0}/{1}/branches'
+			ownRepositories : '/user/repos',
+			getRepository : '/repos/{0}/{1}',
+			listContributors : '/repos/{0}/{1}/contributors',
+			listTags : '/repos/{0}/{1}/tags',
+			listBranches : '/repos/{0}/{1}/branches'
 		},
 		apiMethods = {
-			ownRepositories = 'GET',
-			getRepository = 'GET',
-			listContributors = 'GET',
-			listTags = 'GET',
-			listBranches = 'GET'
+			ownRepositories : 'GET',
+			getRepository : 'GET',
+			listContributors : 'GET',
+			listTags : 'GET',
+			listBranches : 'GET'
 		};
 
 	that.getUserRepositories = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams()) {
-			throw new Error('This method requires authorization, but no username and/or password in the options.');
+		if (!GitHubWrapper.checkAuthParams(options)) {
+			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
 		}
 
 		options.auth == true;
