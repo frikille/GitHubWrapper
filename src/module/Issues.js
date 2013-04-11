@@ -1,3 +1,9 @@
+/**
+ * [ description]
+ * @param  {[type]} namespace [description]
+ * @param  {[type]} undefined [description]
+ * @return {[type]}           [description]
+ */
 (function (namespace, undefined) {
 
 	var that = {},
@@ -134,7 +140,11 @@
 		GitHubWrapper.callApi(options);
 	};
     
-    
+    /**
+     * [listIssuesForRepository description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
     that.listIssuesForRepository = function (options) {
         var options = options || {},
             user = option.user,
@@ -150,6 +160,11 @@
 		GitHubWrapper.callApi(options);
     };
 
+    /**
+     * [getIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.getIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -166,6 +181,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [createIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.createIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -181,6 +201,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [editIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.editIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -197,6 +222,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [listAssignees description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.listAssignees = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -212,6 +242,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [listCommentsOnIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.listCommentsOnIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -228,6 +263,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [getComment description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.getComment = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -244,6 +284,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [createComment description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.createComment = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -260,6 +305,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [editComment description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.editComment = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -276,6 +326,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [deleteComment description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.deleteComment = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -292,6 +347,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [listLabels description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.listLabels = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -307,6 +367,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [createLabel description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.createLabel = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -322,6 +387,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [listLabelsOnIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.listLabelsOnIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -338,6 +408,10 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [addLabelToIssue description]
+     * @param {[type]} options [description]
+     */
 	that.addLabelToIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -354,6 +428,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [removeLabelFromIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.removeLabelFromIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -370,6 +449,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [replaceLabelsOnIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.replaceLabelsOnIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -386,6 +470,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [listMilestones description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.listMilestones = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -401,6 +490,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [getMilestone description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.getMilestone = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -417,6 +511,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [createMilestone description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.createMilestone = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -432,6 +531,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [updateMilestone description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.updateMilestone = function (options) {
 		var options = options || {},
 			user = options.user,

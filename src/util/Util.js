@@ -1,8 +1,9 @@
-String.prototype.format = function (args) {
-	var str = this;
+String.prototype.format = function () {
+	var str = this,
+		args = arguments;
 	return str.replace(String.prototype.format.regex, function(item) {
-		var intVal = parseInt(item.substring(1, item.length - 1));
-		var replace;
+		var intVal = parseInt(item.substring(1, item.length - 1)),
+			replace;
 		if (intVal >= 0) {
 			replace = args[intVal];
 		} else if (intVal === -1) {

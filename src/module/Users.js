@@ -1,3 +1,8 @@
+/**
+ * [ description]
+ * @param  {[type]} namespace               [description]
+ * @param  {[type]} undefined)              [description]
+ */
 (function (namespace, undefined) {
 
 	var that = {},
@@ -12,6 +17,11 @@
 			updateAuthenticatedUser : 'PATCH'
 		};
 
+	/**
+	 * [getAuthenticatedUserData description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.getAuthenticatedUserData = function (options) {
 		var options = options || {};
 
@@ -27,6 +37,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+	/**
+	 * [updateAuthenticatedUser description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.updateAuthenticatedUser = function (options) {
 		var options = options || {};
 

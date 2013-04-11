@@ -1,6 +1,6 @@
 var DEPLOY = __dirname + "/pkg/",
     _path = require('path'),
-	//UglifyJS = require('uglify-js'),
+	UglifyJS = require('uglify-js'),
     fs = require('fs');
 
 function include(files, transform) { 
@@ -47,17 +47,19 @@ task('build', ['clean'], function () {
         modules = [],
         utils = [];
 
-	console.log("Gathering Files...");
 	// Retrieve the version information
-	version = JSON.parse(include("JakeVersion"));
+	console.log('Version increment')
+    version = JSON.parse(include("JakeVersion"));
 	version.build++;
 	versionText = '/* VERSION: ' + version.major + '.' + version.minor + '.' + version.revision + '.' + version.build + '*/\n\n';
 
 	// Retrieve our license information
+    console.log('Including license'); 
 	license = include("JakeLicense");
 	license += versionText;
 
 	// Gather our core JS files
+    console.log("Gathering Files...");
     output = include("src/GitHubWrapper.js");
     collect(__dirname + "/src/module", modules);
     modules.forEach(function (module) {
@@ -69,18 +71,20 @@ task('build', ['clean'], function () {
     });
 
 	// Write our our JS files
+    console.log('Writing developer version') ;
     fs.writeFileSync(__dirname + "/pkg/GitHubWrapper.js", license + output);
 
 	// Minify
-	//console.log("Minifying...");
+	console.log("Minifying...");
 	// First the JavaScript
-	//license = '/*! GitHubWrapper VERSION: ' + version.major + '.' + version.minor + '.' + version.revision + '.' + version.build + ' | github.com/frikille/GitHubWrapper/blob/master/LICENSE !*/';
-	//minified = UglifyJS.minify(__dirname + "/pkg/GitHubWrapper.js");
-	//fs.writeFileSync(__dirname + "/pkg/GitHubWrapper-min.js", license + minified.code);
+	license = '/*! GitHubWrapper VERSION: ' + version.major + '.' + version.minor + '.' + version.revision + '.' + version.build + ' | github.com/frikille/GitHubWrapper/blob/master/LICENSE !*/';
+	minified = UglifyJS.minify(__dirname + "/pkg/GitHubWrapper.js");
+	fs.writeFileSync(__dirname + "/pkg/GitHubWrapper-min.js", license + minified.code);
 
 	// Update our build version
-	versionText = '{"major" : ' + version.major +',	"minor" : ' + version.minor +', "revision" : ' + version.revision + ', "build" : '+ version.build+'}';
+	console.log('Updateing build version');
+    versionText = '{"major" : ' + version.major +',	"minor" : ' + version.minor +', "revision" : ' + version.revision + ', "build" : '+ version.build+'}';
 	fs.writeFileSync("JakeVersion", versionText);
 
-    console.log("Nice job, Jarvis!");
+    console.log("All done. Nice job, Jarvis!");
 });

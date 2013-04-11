@@ -20,81 +20,150 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-/* VERSION: 0.1.0.9*/
+/* VERSION: 0.2.0.2*/
 
-/*
-*/
-var GitHubWrapper = (function() {
+/**
+ * [ description]
+ */
+var GitHubWrapper = ( function() {
 
-	var that = {},
-		xhrBaseOptions = {
-			githubDomain : 'https://api.github.com'
-		};
+    var that = {},
+        xhrBaseOptions = {
+            githubDomain : 'https://api.github.com'
+        },
 
-	var createXHR = function () {
-		try {
-			return new window.XMLHttpRequest();
-		} catch (e) {}
-	};
+        /**
+        * [createXHR description]
+        * @return {[type]} [description]
+        */
+        createXHR = function () {
+            try {
+                return new window.XMLHttpRequest();
+            } catch (e) {
+            }
+        },
 
-	var xhrOnReadyStateChange = function (success, failure) {
-		return function () {
-			if (this.readyState == 4) {
-				if (this.status >= 200 && this.status <= 300 || this.status == 304) {
-					success(JSON.parse(this.responseText), this.getAllResponseHeaders(), this.status);
-				} else {
-					failure(JSON.parse(this.responseText), this.getAllResponseHeaders(), this.status);
-				}
-			}	
-		}
-	};
+        /**
+        * [xhrOnReadyStateChange description]
+        * @param  {[type]} success       [description]
+        * @param  {[type]} failure       [description]
+        * @param  {[type]} callbackScope [description]
+        * @return {[type]}               [description]
+        */
+        xhrOnReadyStateChange = function (success, failure, callbackScope) {
+            return function () {
+                if (this.readyState === 4) {
+                    if ((this.status >= 200 && this.status <= 300) || this.status === 304) {
+                        success.apply(callbackScope || this, [JSON.parse(this.responseText), this.getAllResponseHeaders(), this.status]);
+                    } else {
+                        failure.apply(callbackScope || this, [JSON.parse(this.responseText), this.getAllResponseHeaders(), this.status]);
+                    }
+                }
+            };
+        },
 
-	var emptyFn = function () {};
+        /**
+        * [emptyFn description]
+        * @return {[type]} [description]
+        */
+        emptyFn = function () {},
 
-	that.getEncodedUserNameAndPassword = function (username, password) {
-		return Base64.encode(username + ':' + password);
-	}
+        /**
+        * [buildParamsAsQueryString description]
+        * @param  {[type]} params [description]
+        * @return {[type]}        [description]
+        */
+        buildParamsAsQueryString = function (params) {
 
-	that.callApi = function (options) {
-		var xhr = createXHR(),
-			method = options.method || 'GET',
-			async = true,
-			auth = options.auth || null,
-			authType = options.authType || 'OAUTH',
-			username = options.username,
-			password = options.password,
-			url = xhrBaseOptions.githubDomain + options.apiUrl,
-			success = options.success || emptyFn,
-			failure = options.failure || emptyFn;
+            var queryString = [],
+                p;
 
-		xhr.open(method, url);
+            for (p in params) {
+                if (params.hasOwnProperty(p)) {
+                    queryString.push(p + "=" + params[p]);
+                }
+            }
 
-		xhr.onreadystatechange = xhrOnReadyStateChange(success, failure);
+            return (queryString.length == 0) ? '' : "?" + queryString.join('&');
+        };
 
-		if (auth) {
-			if (authType == 'OAUTH') {
-				xhr.setRequestHeader('Authorization', 'token ' + options.accesToken);
-			} else {
-				xhr.setRequestHeader('Authorization', 'Basic ' + this.getEncodedUserNameAndPassword(username, password));
-			}
-		}
+    /**
+    * [getEncodedUserNameAndPassword description]
+    * @param  {[type]} username [description]
+    * @param  {[type]} password [description]
+    * @return {[type]}          [description]
+    */
+    that.getEncodedUserNameAndPassword = function (username, password) {
+        return Base64.encode(username + ':' + password);
+    };
 
-		xhr.send();
-	};
+    /**
+    * [callApi description]
+    * @param  {[type]} options [description]
+    * @return {[type]}         [description]
+    */
+    that.callApi = function (options) {
+        var xhr = createXHR(),
+            options = options || {},
+            method = options.method || 'GET',
+            async = true,
+            auth = options.auth || null,
+            authType = options.authType || 'OAUTH',
+            username = options.username,
+            password = options.password,
+            url = xhrBaseOptions.githubDomain + options.apiUrl,
+            success = options.success || emptyFn,
+            failure = options.failure || emptyFn,
+            callbackScope = options.callbackScope,
+            params = options.params || {};
 
-	that.checkAuthParams = function (options) {
-		var authType = options.authType || 'OAUTH';
-		if (authType == 'OAUTH') {
-			if (options.accesToken === undefined) return false;
-		} else {
-			if (options.username === undefined || options.password === undefined) return false;
-		}
+        if (method == 'GET') {
+            url += buildParamsAsQueryString(params);
+        }
 
-		return true;
-	}
+        xhr.open(method, url);
 
-	return that;
+        if (auth) {
+            if (authType == 'OAUTH') {
+                xhr.setRequestHeader('Authorization', 'token ' + options.accessToken);
+            } else {
+                xhr.setRequestHeader('Authorization', 'Basic ' + this.getEncodedUserNameAndPassword(username, password));
+            }
+        }
+
+        xhr.onreadystatechange = xhrOnReadyStateChange(success, failure);
+
+        if (method != 'GET') {
+            xhr.send(JSON.stringify(params));
+        } else {
+            xhr.send();
+        }
+    };
+
+    /**
+    * [checkAuthParams description]
+    * @param  {[type]} options [description]
+    * @return {[type]}         [description]
+    */
+    that.checkAuthParams = function (options) {
+        var authType = options.authType || 'OAUTH';
+        
+        if (authType == 'OAUTH') {
+            if (options.accessToken === undefined) return false;
+        } else {
+            if (options.username === undefined || options.password === undefined) return false;
+        }
+
+        return true;
+    };
+
+    return that;
 })();
+/**
+ * [ description]
+ * @param  {[type]} namespace  [description]
+ * @param  {[type]} undefined) [description]
+ */
 (function (namespace, undefined) {
 
 	var that = {},
@@ -155,6 +224,12 @@ var GitHubWrapper = (function() {
 	namespace.Activity = that;
 
 }(window.GitHubWrapper || (window.GitHubWrapper = {})));
+/**
+ * [ description]
+ * @param  {[type]} namespace [description]
+ * @param  {[type]} undefined [description]
+ * @return {[type]}           [description]
+ */
 (function (namespace, undefined) {
 
 	var that = {},
@@ -291,7 +366,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
     
-    
+    /**
+     * [listIssuesForRepository description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
     that.listIssuesForRepository = function (options) {
         var options = options || {},
             user = option.user,
@@ -307,6 +386,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
     };
 
+    /**
+     * [getIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.getIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -323,6 +407,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [createIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.createIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -338,6 +427,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [editIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.editIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -354,6 +448,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [listAssignees description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.listAssignees = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -369,6 +468,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [listCommentsOnIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.listCommentsOnIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -385,6 +489,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [getComment description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.getComment = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -401,6 +510,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [createComment description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.createComment = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -417,6 +531,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [editComment description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.editComment = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -433,6 +552,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [deleteComment description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.deleteComment = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -449,6 +573,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [listLabels description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.listLabels = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -464,6 +593,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [createLabel description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.createLabel = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -479,6 +613,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [listLabelsOnIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.listLabelsOnIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -495,6 +634,10 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [addLabelToIssue description]
+     * @param {[type]} options [description]
+     */
 	that.addLabelToIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -511,6 +654,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [removeLabelFromIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.removeLabelFromIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -527,6 +675,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [replaceLabelsOnIssue description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.replaceLabelsOnIssue = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -543,6 +696,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [listMilestones description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.listMilestones = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -558,6 +716,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [getMilestone description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.getMilestone = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -574,6 +737,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [createMilestone description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.createMilestone = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -589,6 +757,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+    /**
+     * [updateMilestone description]
+     * @param  {[type]} options [description]
+     * @return {[type]}         [description]
+     */
 	that.updateMilestone = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -607,6 +780,11 @@ var GitHubWrapper = (function() {
 
 }(window.GitHubWrapper || (window.GitHubWrapper = {})));
 
+/**
+ * [ description]
+ * @param  {[type]} namespace        [description]
+ * @param  {[type]} undefined)       [description]
+ */
 (function (namespace, undefined) {
 
 	var that = {},
@@ -625,6 +803,11 @@ var GitHubWrapper = (function() {
 			listBranches : 'GET'
 		};
 
+	/**
+	 * [getUserRepositories description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.getUserRepositories = function (options) {
 		var options = options || {};
 
@@ -640,6 +823,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+	/**
+	 * [getRepository description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.getRepository = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -655,6 +843,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+	/**
+	 * [listRepositoryContributors description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.listRepositoryContributors = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -670,6 +863,11 @@ var GitHubWrapper = (function() {
 
 	};
 
+	/**
+	 * [listRepositoryTags description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.listRepositoryTags = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -685,6 +883,11 @@ var GitHubWrapper = (function() {
 
 	};
 
+	/**
+	 * [listRepositoryBranches description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.listRepositoryBranches = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -704,6 +907,11 @@ var GitHubWrapper = (function() {
 	namespace.Repositories = that;
 
 }(window.GitHubWrapper || (window.GitHubWrapper = {})));
+/**
+ * [ description]
+ * @param  {[type]} namespace               [description]
+ * @param  {[type]} undefined)              [description]
+ */
 (function (namespace, undefined) {
 
 	var that = {},
@@ -718,6 +926,11 @@ var GitHubWrapper = (function() {
 			updateAuthenticatedUser : 'PATCH'
 		};
 
+	/**
+	 * [getAuthenticatedUserData description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.getAuthenticatedUserData = function (options) {
 		var options = options || {};
 
@@ -733,6 +946,11 @@ var GitHubWrapper = (function() {
 		GitHubWrapper.callApi(options);
 	};
 
+	/**
+	 * [updateAuthenticatedUser description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.updateAuthenticatedUser = function (options) {
 		var options = options || {};
 
@@ -885,11 +1103,12 @@ Base64 = { //http://www.webtoolkit.info/javascript-base64.html
 	}		
 
 }
-String.prototype.format = function (args) {
-	var str = this;
+String.prototype.format = function () {
+	var str = this,
+		args = arguments;
 	return str.replace(String.prototype.format.regex, function(item) {
-		var intVal = parseInt(item.substring(1, item.length - 1));
-		var replace;
+		var intVal = parseInt(item.substring(1, item.length - 1)),
+			replace;
 		if (intVal >= 0) {
 			replace = args[intVal];
 		} else if (intVal === -1) {

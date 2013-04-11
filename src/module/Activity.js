@@ -1,3 +1,8 @@
+/**
+ * [ description]
+ * @param  {[type]} namespace  [description]
+ * @param  {[type]} undefined) [description]
+ */
 (function (namespace, undefined) {
 
 	var that = {},

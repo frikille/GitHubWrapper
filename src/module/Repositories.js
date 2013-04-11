@@ -1,3 +1,8 @@
+/**
+ * [ description]
+ * @param  {[type]} namespace        [description]
+ * @param  {[type]} undefined)       [description]
+ */
 (function (namespace, undefined) {
 
 	var that = {},
@@ -16,6 +21,11 @@
 			listBranches : 'GET'
 		};
 
+	/**
+	 * [getUserRepositories description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.getUserRepositories = function (options) {
 		var options = options || {};
 
@@ -31,6 +41,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+	/**
+	 * [getRepository description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.getRepository = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -46,6 +61,11 @@
 		GitHubWrapper.callApi(options);
 	};
 
+	/**
+	 * [listRepositoryContributors description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.listRepositoryContributors = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -61,6 +81,11 @@
 
 	};
 
+	/**
+	 * [listRepositoryTags description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.listRepositoryTags = function (options) {
 		var options = options || {},
 			user = options.user,
@@ -76,6 +101,11 @@
 
 	};
 
+	/**
+	 * [listRepositoryBranches description]
+	 * @param  {[type]} options [description]
+	 * @return {[type]}         [description]
+	 */
 	that.listRepositoryBranches = function (options) {
 		var options = options || {},
 			user = options.user,
