@@ -107,7 +107,7 @@ var GitHubWrapper = ( function() {
             }
         }
 
-        xhr.onreadystatechange = xhrOnReadyStateChange(success, failure);
+        xhr.onreadystatechange = xhrOnReadyStateChange(success, failure, callbackScope);
 
         if (method != 'GET') {
             xhr.send(JSON.stringify(params));
