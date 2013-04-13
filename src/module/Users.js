@@ -25,10 +25,6 @@
 	that.getAuthenticatedUserData = function (options) {
 		var options = options || {};
 
-		if (!GitHubWrapper.checkAuthParams(options)) {
-			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
-		}
-
 		options.auth == true;
 
 		options.method = apiMethods['getAuthenticatedUser'];
@@ -44,10 +40,6 @@
 	 */
 	that.updateAuthenticatedUser = function (options) {
 		var options = options || {};
-
-		if (!GitHubWrapper.checkAuthParams(options)) {
-			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
-		}
 
 		options.auth == true;
 

@@ -30,10 +30,6 @@
 		options.method = apiMethods['listNotifications'];
 		options.apiUrl = apiUrls['listNotifications'];
 
-		if (!GitHubWrapper.checkAuthParams(options)) {
-			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
-		}
-
 		GitHubWrapper.callApi(options);
 
 	};
@@ -52,10 +48,6 @@
 		options.auth == true;
 		options.method = apiMethods['markAsRead'];
 		options.apiUrl = apiUrls['markAsRead'];
-
-		if (!GitHubWrapper.checkAuthParams(options)) {
-			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
-		}
 
 		GitHubWrapper.callApi(options);
 	}

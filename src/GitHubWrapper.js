@@ -4,10 +4,12 @@
 var GitHubWrapper = ( function() {
 
     var that = {},
+        authType,
+        accessToken,
+        encodedUserNameAndPassword,
         xhrBaseOptions = {
             githubDomain : 'https://api.github.com'
         },
-
         /**
         * [createXHR description]
         * @return {[type]} [description]
@@ -63,6 +65,22 @@ var GitHubWrapper = ( function() {
             return (queryString.length == 0) ? '' : "?" + queryString.join('&');
         };
 
+    that.init = function (config) {
+        if (config.authType == 'BASIC' || config.authType == 'OAUTH') {
+            authType = config.authType;
+        } else {
+            authType = 'NONE';
+        }
+
+        if (authType == 'OAUTH') {
+            accessToken = config.accessToken;
+        }
+
+        if (authType == 'BASIC') {
+            encodedUserNameAndPassword = getEncodedUserNameAndPassword(config.username, config.password);
+        }
+    }
+
     /**
     * [getEncodedUserNameAndPassword description]
     * @param  {[type]} username [description]
@@ -84,9 +102,9 @@ var GitHubWrapper = ( function() {
             method = options.method || 'GET',
             async = true,
             auth = options.auth || null,
-            authType = options.authType || 'OAUTH',
-            username = options.username,
-            password = options.password,
+            // authType = options.authType || 'OAUTH',
+            // username = options.username,
+            // password = options.password,
             url = options.url || xhrBaseOptions.githubDomain + options.apiUrl,
             success = options.success || emptyFn,
             failure = options.failure || emptyFn,
@@ -99,12 +117,16 @@ var GitHubWrapper = ( function() {
 
         xhr.open(method, url);
 
-        if (auth) {
-            if (authType == 'OAUTH') {
-                xhr.setRequestHeader('Authorization', 'token ' + options.accessToken);
-            } else {
-                xhr.setRequestHeader('Authorization', 'Basic ' + this.getEncodedUserNameAndPassword(username, password));
-            }
+        if (auth && authType == 'NONE') {
+            throw new Error('The method [' + url + '] requires authentication but no authentication credentials were set!');
+        }
+
+        if (authType == 'OAUTH') {
+            xhr.setRequestHeader('Authorization', 'token ' + accessToken);
+        }
+
+        if (authType == 'BASIC') {
+            xhr.setRequestHeader('Authorization', 'Basic ' + encodedUserNameAndPassword);
         }
 
         xhr.onreadystatechange = xhrOnReadyStateChange(success, failure, callbackScope);

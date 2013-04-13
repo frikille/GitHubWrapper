@@ -56,8 +56,6 @@
 			updateMilestone : 'PATCH'
 		};
 
-	namespace.Issues = that;
-
 	/*
 	* Returns all issues of the current user.
 	* 
@@ -86,10 +84,6 @@
 	*/
 	that.listUserAllIssues = function (options) {
 		var options = options || {};
-
-		if (!GitHubWrapper.checkAuthParams(options)) {
-			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
-		}
 
 		options.auth == true;
 
@@ -127,10 +121,6 @@
 	*/
 	that.listUserIssuesOfOwnedAndMemberRepositories = function (options) {
 		var options = options || {};
-
-		if (!GitHubWrapper.checkAuthParams(options)) {
-			throw new Error('This method requires authorization, but no username:password or access_token in the options.');
-		}
 
 		options.auth == true;
 
@@ -551,5 +541,7 @@
 
 		GitHubWrapper.callApi(options);
 	};
+
+	namespace.Issues = that;
 
 }(window.GitHubWrapper || (window.GitHubWrapper = {})));
