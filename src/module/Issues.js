@@ -137,7 +137,7 @@
      */
     that.listIssuesForRepository = function (options) {
         var options = options || {},
-            user = option.user,
+            user = options.user,
             repo = options.repo;
             
         if (user === undefined || repo === undefined) {
